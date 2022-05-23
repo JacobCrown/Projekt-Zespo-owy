@@ -7,6 +7,12 @@ from .utils import cookieCart, cartData, guestOrder
 
 from .models import Customer
 
+def home(request):
+    return render(request, 'store/home.html')
+
+def photo(request):
+    return render(request, 'store/photo.html')
+
 def store(request):
 	data = cartData(request)
 

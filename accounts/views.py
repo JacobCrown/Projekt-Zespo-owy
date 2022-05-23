@@ -30,6 +30,7 @@ class CustomerUpdateView(UpdateView):
     template_name = 'accounts/profile_edit.html'
     # success_url = reverse_lazy('checkout')
 
+
 class Frm(ModelForm):
     class Meta:
         model = Customer

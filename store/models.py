@@ -9,6 +9,8 @@ class Customer(models.Model):
 	email = models.EmailField(max_length=200)
 	profile_image = models.ImageField(
         null=True, blank=True, upload_to='profiles/', default='profiles/user-default.png')
+	# predicted_gender = models.BooleanField(null=True, default=True)
+	# predicted_age = models.PositiveSmallIntegerField(null=True)
 
 	def __str__(self):
 		return self.name
