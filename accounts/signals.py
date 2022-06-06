@@ -24,7 +24,6 @@ def profile_create(sender, instance, created, **kwargs):
         )
 
 def profile_update(sender, instance, created, **kwargs):
-    print("update here !!!!!!!!!!!!!!")
     customer = instance
     user = customer.user
     user.username = customer.name
@@ -32,6 +31,7 @@ def profile_update(sender, instance, created, **kwargs):
     user.save()
 
     if customer.profile_image != 'profiles/user-default.png':
+        print('changed image')
         print(customer.profile_image)
         print(settings.MEDIA_ROOT + str(customer.profile_image))
         path = os.path.join(settings.MEDIA_ROOT, str(customer.profile_image))
@@ -47,32 +47,34 @@ def profile_update(sender, instance, created, **kwargs):
             (x, y, w, h) = face_rect[0]
                 # img = cv.rectangle(img, (x,y), (x+w, y + h), (0, 255, 0), thickness=2)
 
-        face_img = img[y:y+h, x:x+w]
+            face_img = img[y:y+h, x:x+w]
 
-        proper_image = cv.resize(face_img, (200, 200))
-        img = cv.rectangle(img, (x,y), (x+w, y + h), (0, 255, 0), thickness=2)
-        cv.imwrite(os.path.join(settings.MEDIA_ROOT, 'tmp.png'), proper_image)
-        cv.imshow('cos', proper_image)
-        cv.waitKey()
+            proper_image = cv.resize(face_img, (200, 200))
+            img = cv.rectangle(img, (x,y), (x+w, y + h), (0, 255, 0), thickness=2)
+            cv.imwrite(os.path.join(settings.MEDIA_ROOT, 'tmp.png'), proper_image)
+            cv.imshow('cos', proper_image)
+            cv.waitKey()
 
-        # IMGPATH = path
-        # gender estimation
-        IMGPATH = os.path.join(settings.MEDIA_ROOT, 'tmp.png')
-        MODELPATH = os.path.join(settings.BASE_DIR, 'genderModel', 'model.pth')
-        model_.load_state_dict(torch.load(MODELPATH, map_location=DEVICE))
-        model_.to(DEVICE)
-        testimg = load_image(IMGPATH)
-        output = predict_gender(model_, testimg)
-        print('gender: ', output)
+            # IMGPATH = path
+            # gender estimation
+            IMGPATH = os.path.join(settings.MEDIA_ROOT, 'tmp.png')
+            MODELPATH = os.path.join(settings.BASE_DIR, 'genderModel', 'model.pth')
+            model_.load_state_dict(torch.load(MODELPATH, map_location=DEVICE))
+            model_.to(DEVICE)
+            testimg = load_image(IMGPATH)
+            output = predict_gender(model_, testimg)
+            print('gender: ', output)
 
-        # age category estimation
-        IMGPATH_AGE = os.path.join(settings.MEDIA_ROOT, 'tmp.png')
-        MODELPATH_AGE = os.path.join(settings.BASE_DIR, 'ageModel', 'model_age.pth')
-        model_age_.load_state_dict(torch.load(MODELPATH_AGE, map_location=DEVICE_AGE))
-        model_age_.to(DEVICE_AGE)
-        testimg = load_image(IMGPATH_AGE)
-        output = predict_gender(model_, testimg)
-        print('age', output)
+            # age category estimation
+            IMGPATH_AGE = os.path.join(settings.MEDIA_ROOT, 'tmp.png')
+            MODELPATH_AGE = os.path.join(settings.BASE_DIR, 'ageModel', 'model_age.pth')
+            model_age_.load_state_dict(torch.load(MODELPATH_AGE, map_location=DEVICE_AGE))
+            model_age_.to(DEVICE_AGE)
+            testimg = load_image(IMGPATH_AGE)
+            output = predict_gender(model_, testimg)
+            print('age', output)
+        else:
+            print('Face not detected')
 
 
 post_save.connect(profile_create, sender=get_user_model())

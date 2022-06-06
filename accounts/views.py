@@ -42,9 +42,7 @@ def edit(request, pk):
 
     if request.method == 'POST':
         form = Frm(request.POST, request.FILES, instance=customer)
-        print('hello')
         if form.is_valid():
-            print('world')
             form.save()
             
             return redirect('profile')

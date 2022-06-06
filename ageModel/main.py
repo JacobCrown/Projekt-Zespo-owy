@@ -52,7 +52,7 @@ def predict_gender(model, image):
 
 
 MODELPATH_AGE = "model_age.pth"
-IMGPATH_AGE = "testimg2.jpg"
+IMGPATH_AGE = "1rahca.jpg"
 DEVICE_AGE = "cuda" if torch.cuda.is_available() else "cpu"
 
 model_age_ = ConvolutionalNetwork_age()
