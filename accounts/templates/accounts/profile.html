@@ -11,4 +11,11 @@
 
 <h3>Edit your account <a href="{% url 'profile-edit' pk=request.user.customer.pk %}" >here</a></h3>
 
+{% if customer.predicted_gender %}
+<p>We predicted your gender as {% if customer.gender == 1 %}male{% else %}female.{% endif %}</p>
+{% endif %}
+{% if customer.predicted_age %}
+<p>We predicted your age interval as {{ customer.age }}</p>
+{% endif %}
+
 {% endblock content %}

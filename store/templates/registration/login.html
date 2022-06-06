@@ -1,7 +1,5 @@
 {% extends 'store/home.html' %}
-
-{% load crispy_forms_tags %}
-
+{% load static %}
 
 <body class="text-center">
   <!--Zaloguj sie-->
@@ -9,10 +7,19 @@
   <main class="form-signin">
     <form method="POST">
       {% csrf_token %}
-      <img class="mb-4" src="/images/loginIcon.png" alt="" width="72" height="72">
+      <img class="mb-4" src="{% static 'images/loginIcon.png' %}" alt="" width="72" height="72">
       <h1 class="h3 mb-3 fw-normal">Please log in</h1>
 
-      {{ form }}
+      <div class="form-floating">
+        {{ form.username.errors }}
+        <label for="{{ form.username.id_for_label }}">Username:</label>
+        {{ form.username }}
+      </div>
+      <div class="form-floating">
+        {{ form.password.errors }}
+        <label for="{{ form.password.id_for_label }}">Password:</label>
+        {{ form.password }}
+      </div>
 
       <div class="checkbox mb-3">
         <label>
@@ -29,5 +36,3 @@
 
 
 </body>
-
-</html>

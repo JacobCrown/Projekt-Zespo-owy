@@ -2,73 +2,148 @@
 
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
   <title>Online shop "Projekt zespolowy"</title>
+
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <link href="{% static 'dist/css/bootstrap.css' %}" rel="stylesheet">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+  <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+
+  <script type="text/javascript">
+    var user = '{{request.user}}'
+
+    function getToken(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+    var csrftoken = getToken('csrftoken')
+
+    function getCookie(name) {
+      // Split cookie string and get all individual name=value pairs in an array
+      var cookieArr = document.cookie.split(";");
+
+      // Loop through the array elements
+      for (var i = 0; i < cookieArr.length; i++) {
+        var cookiePair = cookieArr[i].split("=");
+
+        /* Removing whitespace at the beginning of the cookie name
+        and compare it with the given string */
+        if (name == cookiePair[0].trim()) {
+          // Decode the cookie value and return
+          return decodeURIComponent(cookiePair[1]);
+        }
+      }
+
+      // Return null if not found
+      return null;
+    }
+    var cart = JSON.parse(getCookie('cart'))
+
+    if (cart == undefined) {
+      cart = {}
+      console.log('Cart Created!', cart)
+      document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+    }
+    console.log('Cart:', cart)
+  </script>
 </head>
 
 <body>
   <!--Naglowek-->
- <header class="p-3 bg-black text-white">
- <!--padding 1 rem; background black; text white-->
-  <div class="container">
-    <!--display flex; flex container in multiple lines; align !flex! items in center;-->
-    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <!--margin right auto; margin bottom 0.5 rem-->
-      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="{% url 'home' %}" class="nav-link px-2 text-primary">Home</a></li>
-        <li><a href="{% url 'store' %}" class="nav-link px-2 text-white">Store</a></li>
-        <li><a href="{% url 'photo' %}" class="nav-link px-2 text-white">Photo</a></li>
-        <li><a href="{% url 'cart' %}" class="nav-link px-2 text-white">Cart</a></li>
-        {% if request.user.is_authenticated %}
+  <header class="p-3 bg-black text-white">
+    <!--padding 1 rem; background black; text white-->
+    <div class="container">
+      <!--display flex; flex container in multiple lines; align !flex! items in center;-->
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <!--margin right auto; margin bottom 0.5 rem-->
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="{% url 'home' %}" class="nav-link px-2 text-primary">Home</a></li>
+          <li><a href="{% url 'store' %}" class="nav-link px-2 text-white">Store</a></li>
+          <li><a href="{% url 'photo' %}" class="nav-link px-2 text-white">Photo</a></li>
+          <li><a href="{% url 'cart' %}" class="nav-link px-2 text-white">Cart</a></li>
+          {% if request.user.is_authenticated %}
           <li><a href="{% url 'profile' request.user.customer.id %}" class="nav-link px-2 text-white">Profil</a></li>
-        {% endif %}
-      </ul>
-      <div class="text-end">
-        {% if request.user.is_authenticated %}
+          {% endif %}
+        </ul>
+        <div class="form-inline my-2 my-lg-0">
+          {% if request.user.is_authenticated %}
           <a href="{% url 'logout' %}" class="btn btn-outline-light me-2">Logout</a>
-        {% else %}
+          {% else %}
           <a href="{% url 'signup' %}" class="btn btn-outline-light me-2">Sign up</a>
           <a href="{% url 'login' %}" class="btn btn-primary">Log in</a>
-        {% endif %}
+          {% endif %}
+          <a href="{% url 'cart' %}">
+            <img id="cart-icon" src="{% static 'images/cart.png' %}">
+          </a>
+          <p id="cart-total">{{cartItems}}</p>
+        </div>
+      </div>
+    </div>
+  </header>
+  <h2>Cześć {{ request.user.username }}</h2>
+  {% block content %}
+  <div class="container col-xxl-8 px-4 py-5">
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+      <div class="col-10 col-sm-8 col-lg-6">
+        <img src="{% static 'images/facial.jpg' %}" class="d-block mx-lg-auto img-fluid" alt="Photo" width="2000" height="1000"
+          loading="lazy">
+      </div>
+      <div class="col-lg-6">
+        <h1 class="display-5 fw-bold lh-1 mb-3">Upload your photo to see more accurate recommendations</h1>
+        <p class="lead">----------Opis funkcjonalnosci -------Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+          exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+          <a href="{% url 'photo' %}" class="btn btn-primary btn-lg px-4 me-md-2">Read more</a>
+
+        </div>
       </div>
     </div>
   </div>
- </header>
- <h2>Cześć {{ request.user.username }}</h2>
-{% block content %}
- <div class="container col-xxl-8 px-4 py-5">
-   <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
-     <div class="col-10 col-sm-8 col-lg-6">
-       <img src="/images/facial.jpg" class="d-block mx-lg-auto img-fluid" alt="Photo" width="2000" height="1000" loading="lazy">
-     </div>
-     <div class="col-lg-6">
-       <h1 class="display-5 fw-bold lh-1 mb-3">Upload your photo to see more accurate recommendations</h1>
-       <p class="lead">----------Opis funkcjonalnosci -------Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
-       <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-        <a href="{% url 'photo' %}" class="btn btn-primary btn-lg px-4 me-md-2">Read more</a>
-
-       </div>
-     </div>
-   </div>
- </div>
-{% endblock content %}
+  {% endblock content %}
 
 
-<!--Stopka-->
- <div class="container">
-  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-    <p class="col-md-4 mb-0 text-muted">&copy; 2022 Company, Inc</p>
-    <ul class="nav col-md-4 justify-content-end">
-      <li class="nav-item"><a href="{% url 'home' %}" class="nav-link px-2 text-muted">Home</a></li>
-      <li class="nav-item"><a href="{% url 'store' %}" class="nav-link px-2 text-muted">Store</a></li>
-      <li class="nav-item"><a href="{% url 'photo' %}" class="nav-link px-2 text-muted">Photo</a></li>
-      <li class="nav-item"><a href="{% url 'cart' %}" class="nav-link px-2 text-muted">Cart</a></li>
-    </ul>
-  </footer>
-</div>
+  <!--Stopka-->
+  <div class="container">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+      <p class="col-md-4 mb-0 text-muted">&copy; 2022 Company, Inc</p>
+    </footer>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+  </script>
+
+  <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
 
 </body>
+
 </html>

@@ -9,8 +9,19 @@ class Customer(models.Model):
 	email = models.EmailField(max_length=200)
 	profile_image = models.ImageField(
         null=True, blank=True, upload_to='profiles/', default='profiles/user-default.png')
-	# predicted_gender = models.BooleanField(null=True, default=True)
-	# predicted_age = models.PositiveSmallIntegerField(null=True)
+	predicted_gender = models.BooleanField(null=True, default=False)
+	predicted_age = models.BooleanField(null=True, default=False)
+	# 1 - male
+	# 2 - female
+	gender = models.PositiveSmallIntegerField(null=True)
+	# 0 = 8-15
+	# 1 = 15-20
+	# 2 = 20-30
+	# 3 = 30-45
+	# 4 = 45-55
+	# 5 = 55-70
+	# 6 = 70-..
+	age = models.PositiveSmallIntegerField(null=True)
 
 	def __str__(self):
 		return self.name
@@ -28,12 +39,25 @@ class Customer(models.Model):
 		return url
 
 
+class Category(models.Model):
+	# 0 = 8-15
+	# 1 = 15-20
+	# 2 = 20-30
+	# 3 = 30-45
+	# 4 = 45-55
+	# 5 = 55-70
+	# 6 = 70-..
+    interval = models.PositiveSmallIntegerField(null=True)
+    gender = models.PositiveSmallIntegerField(null=True)
+	
+
 
 class Product(models.Model):
 	name = models.CharField(max_length=200)
 	price = models.FloatField()
 	digital = models.BooleanField(default=False,null=True, blank=True)
 	image = models.ImageField(null=True, blank=True)
+	category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, null=True, blank=True)
 
 	def __str__(self):
 		return self.name

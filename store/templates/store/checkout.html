@@ -1,7 +1,12 @@
-{% extends 'store/main.html' %}
+{% extends 'store/home.html' %}
 {% load static %}
+
 {% block content %}
-     <div class="row">
+
+<body class="bg-light">
+
+
+<div class="row">
 		<div class="col-lg-6">
 			<div class="box-element" id="form-wrapper">
 				<form id="form">
@@ -33,7 +38,7 @@
 					</div>
 
 					<hr>
-					<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
+					<input id="form-button" class="w-100 btn btn-primary btn-l" type="submit" value="Continue">
 				</form>
 			</div>
 
@@ -66,12 +71,9 @@
 		</div>
 	</div>
 
-	<!-- <script src="https://www.paypal.com/sdk/js?client-id=YOUR-CLIENT-ID&currency=USD&disable-funding=credit"></script> -->
 
-	
 
-	
+</body>
 {% endblock content %}
 
-
- 
+</html>

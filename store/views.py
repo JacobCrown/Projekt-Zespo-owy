@@ -2,27 +2,48 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import json
 import datetime
-from .models import * 
+from .models import *
 from .utils import cookieCart, cartData, guestOrder
 
-from .models import Customer
+from .models import Customer, Category
+
 
 def home(request):
-    return render(request, 'store/home.html')
+    data = cartData(request)
+
+    cartItems = data['cartItems']
+
+    context = {'cartItems': cartItems}
+
+    return render(request, 'store/home.html', context)
 
 def photo(request):
-    return render(request, 'store/photo.html')
+    data = cartData(request)
+
+    cartItems = data['cartItems']
+
+    context = {'cartItems': cartItems}
+
+    return render(request, 'store/photo.html', context)
+
 
 def store(request):
-	data = cartData(request)
+    data = cartData(request)
 
-	cartItems = data['cartItems']
-	order = data['order']
-	items = data['items']
+    cartItems = data['cartItems']
 
-	products = Product.objects.all()
-	context = {'products':products, 'cartItems':cartItems}
-	return render(request, 'store/store.html', context)
+    user = request.user
+    print(user)
+    print(type(user))
+    if user.is_authenticated and user.customer.predicted_age:
+        products = Category.objects.get(
+            interval=user.customer.age,
+            gender=user.customer.gender).product_set.all()
+    else:
+        products = Product.objects.all()
+
+    context = {'products': products, 'cartItems': cartItems}
+    return render(request, 'store/store.html', context)
 
 
 def cart(request):
