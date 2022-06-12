@@ -27,7 +27,8 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view(), name='logout'), 
     path('login/', views.LoginView.as_view(
             template_name="registration/login.html",
-            authentication_form=UserLoginForm
+            authentication_form=UserLoginForm,
+            extra_context={'cartItems': 0}
             ),
         name='login'),
     path('accounts/', include('accounts.urls')), 

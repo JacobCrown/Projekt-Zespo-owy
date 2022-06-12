@@ -1,0 +1,49 @@
+{% extends 'store/home.html' %}
+{% load static %}
+
+
+  
+{% block content %}
+<div class="container">
+  <main class="d-block px-4 py-5 mb-3 mb-lg-0 me-lg-3">
+      <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4" src="{{ customer.profile_image.url }}" alt="Twoje zdjecie" width="352" height="272">
+        <h2>Account Information</h2>
+      </div>
+  
+      <div class="row g-5 ">
+        <div class="">
+          <form class="needs-validation " novalidate>
+            <div class="row g-3">
+                <!--First name-->
+              <div class="col-sm-6">
+                <label for="userName" class="form-label">Username</label>
+               <h5>{{ customer.name }}</h5>
+              </div>
+                <!--E-mail-->
+              <div class="col-12">
+                <label for="email" class="form-label">Email </label>
+                <h5>{{ customer.email }}</h5>
+              </div>
+              {% if customer.predicted_gender %}
+              <div class="col-12">
+                <label for="email" class="form-label">Predicted gender</label>
+                <h5>We predicted your gender as {% if customer.gender == 1 %}male{% else %}female.{% endif %}</h5>
+              </div>
+              {% endif %}
+              {% if customer.predicted_age %}
+              <div class="col-12">
+                <label for="email" class="form-label">Predicted age interval</label>
+                <h5>We predicted your age interval as {{ customer.age }}</h5>
+              </div>
+              {% endif %}
+               
+            </div>
+            <hr class="col-12">
+            <a href="{% url 'profile-edit' customer.id %}" class="w-100 btn btn-primary btn-lg " type="submit">Edit</a>
+          </form>
+        </div>
+      </div>
+  </main>
+</div>     
+{% endblock content %}

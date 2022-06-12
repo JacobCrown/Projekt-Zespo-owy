@@ -1,13 +1,12 @@
 from django.forms import ModelForm
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.views.generic.edit import UpdateView
 from django.forms import ModelForm
 
-from ecommerce.settings import LOGIN_REDIRECT_URL
-
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, EditCustomerForm
 from store.utils import cartData
 
 from store.models import Customer
@@ -17,9 +16,14 @@ class SignUpView(generic.CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('login')
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(SignUpView, self).get_context_data(*args,**kwargs)
+        context['cartItems'] = 0
+        return context
 
-class CustomerView(generic.DetailView):
-    template_name = 'accounts/profile.html'
+class CustomerView(LoginRequiredMixin, UserPassesTestMixin, generic.DetailView):
+    redirect_field_name = 'home'
+    template_name = 'accounts/profil.html'
     model = Customer
     context_object_name = 'customer'
 
@@ -29,12 +33,16 @@ class CustomerView(generic.DetailView):
         context['cartItems'] = cartData(request)['cartItems']
         
         return render(request, self.template_name, context)
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj == self.request.user.customer
     
-class CustomerUpdateView(UpdateView):
+class CustomerUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    redirect_field_name = 'home'
     model = Customer
-    fields = ['name', 'email', 'profile_image']
-    template_name = 'accounts/profile_edit.html'
-    # success_url = reverse_lazy('checkout')
+    form_class = EditCustomerForm
+    template_name = 'accounts/profiledit.html'
 
     def get(self, request, **kwargs):
         self.object = Customer.objects.get(id=kwargs['pk'])
@@ -42,28 +50,7 @@ class CustomerUpdateView(UpdateView):
         context['cartItems'] = cartData(request)['cartItems']
         
         return render(request, self.template_name, context)
-        
-        
 
-
-class Frm(ModelForm):
-    class Meta:
-        model = Customer
-        fields = ['name', 'email', 'profile_image']
-
-def edit(request, pk):
-    customer = Customer.objects.get(id=pk)
-    form = Frm(instance=customer)
-
-    if request.method == 'POST':
-        form = Frm(request.POST, request.FILES, instance=customer)
-        if form.is_valid():
-            form.save()
-            
-            return redirect('profile')
-    context = {'form': form}    
-    return render(request, 'accounts/profile_edit.html', context)
-
-        
-        
-    
+    def test_func(self):
+        obj = self.get_object()
+        return obj == self.request.user.customer

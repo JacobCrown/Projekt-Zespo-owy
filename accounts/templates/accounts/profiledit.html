@@ -1,0 +1,87 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Online shop</title>
+  <link href="{% static 'dist/css/bootstrap.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link href="{% static 'css/crop.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+  
+  <style>.container {
+    max-width: 960px;
+
+  }</style>
+</head>
+
+<body>
+  <!--Naglowek-->
+  <header class="p-3 bg-black text-white">
+    <!--padding 1 rem; background black; text white-->
+    <div class="container">
+      <!--display flex; flex container in multiple lines; align !flex! items in center;-->
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <!--margin right auto; margin bottom 0.5 rem-->
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="{% url 'home' %}" class="nav-link px-2 text-primary">Home</a></li>
+          <li><a href="{% url 'store' %}" class="nav-link px-2 text-white">Store</a></li>
+          <li><a href="{% url 'cart' %}" class="nav-link px-2 text-white">Cart</a></li>
+          {% if request.user.is_authenticated %}
+          <li><a href="{% url 'profile' request.user.customer.id %}" class="nav-link px-2 text-white">Profil</a></li>
+          {% endif %}
+        </ul>
+        <div class="form-inline my-2 my-lg-0">
+          {% if request.user.is_authenticated %}
+          <a href="{% url 'logout' %}" class="btn btn-outline-light me-2">Logout</a>
+          {% else %}
+          <a href="{% url 'signup' %}" class="btn btn-outline-light me-2">Sign up</a>
+          <a href="{% url 'login' %}" class="btn btn-primary">Log in</a>
+          {% endif %}
+          <a href="{% url 'cart' %}">
+            <img id="cart-icon" src="{% static 'images/cart.png' %}">
+          </a>
+          <p id="cart-total">{{cartItems}}</p>
+        </div>
+      </div>
+    </div>
+  </header>
+  <h2>Cześć {{ request.user.username }}</h2>
+   
+   <!--Dane-->   
+<div class="container">
+  <main class="d-block px-4 py-5 mb-3 mb-lg-0 me-lg-3">
+
+      
+  <!--edycja danych-->
+      <div class="row g-5 ">
+        <div class="">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="w-100 btn btn-primary btn-lg" type="submit">Save changes</button>
+          </form>
+        </div>
+      </div>
+  </main>
+</div>     
+
+       <!-- Alert -->
+<script src="{% static '/js/crop.js' %}"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://fengyuanchen.github.io/js/common.js"></script>
+<script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.min.js"></script>
+<script defer src="https://cdn.crop.guide/loader/l.js?c=XQGMJM"></script>
+  
+</body>
+</html>

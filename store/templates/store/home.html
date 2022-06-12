@@ -66,6 +66,9 @@
     }
     console.log('Cart:', cart)
   </script>
+  <style>.container {
+    max-width: 960px;
+  }</style>
 </head>
 
 <body>
@@ -79,7 +82,6 @@
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="{% url 'home' %}" class="nav-link px-2 text-primary">Home</a></li>
           <li><a href="{% url 'store' %}" class="nav-link px-2 text-white">Store</a></li>
-          <li><a href="{% url 'photo' %}" class="nav-link px-2 text-white">Photo</a></li>
           <li><a href="{% url 'cart' %}" class="nav-link px-2 text-white">Cart</a></li>
           {% if request.user.is_authenticated %}
           <li><a href="{% url 'profile' request.user.customer.id %}" class="nav-link px-2 text-white">Profil</a></li>
@@ -100,7 +102,6 @@
       </div>
     </div>
   </header>
-  <h2>Cześć {{ request.user.username }}</h2>
   {% block content %}
   <div class="container col-xxl-8 px-4 py-5">
     <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
@@ -110,13 +111,6 @@
       </div>
       <div class="col-lg-6">
         <h1 class="display-5 fw-bold lh-1 mb-3">Upload your photo to see more accurate recommendations</h1>
-        <p class="lead">----------Opis funkcjonalnosci -------Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-          exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-          <a href="{% url 'photo' %}" class="btn btn-primary btn-lg px-4 me-md-2">Read more</a>
-
-        </div>
       </div>
     </div>
   </div>
@@ -143,6 +137,7 @@
   </script>
 
   <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+
 
 </body>
 

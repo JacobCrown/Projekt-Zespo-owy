@@ -3,11 +3,6 @@ body {
   height: 100%;
 }
 
-.container {
-    max-width: 500px;
-    align-items: center;
-  }
-
 body {
   display: flex;
   align-items: center;
