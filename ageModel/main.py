@@ -1,11 +1,7 @@
 import torch
-import matplotlib.pyplot as plt
 import torchvision
-import cv2
-import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
-from PIL import Image
 
 
 class ConvolutionalNetwork_age(nn.Module):
